@@ -7,6 +7,7 @@ var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 
+// this api will create a new user in database
 const createUser = async (req, res, next) => {
   try {
     const { name, password, email, mobileNumber, typeOfUser, designation } =
