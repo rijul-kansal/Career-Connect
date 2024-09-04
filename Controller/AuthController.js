@@ -10,7 +10,7 @@ const { promisify } = require('util');
 // this api will create a new user in database
 const createUser = async (req, res, next) => {
   try {
-    const { name, password, email, mobileNumber, typeOfUser, designation } =
+    const { name, password, email, typeOfUser, designation, mobileNumber } =
       req.body;
 
     if (typeOfUser === 'User') {
@@ -29,9 +29,9 @@ const createUser = async (req, res, next) => {
       name,
       password,
       email,
-      mobileNumber,
       typeOfUser,
       designation,
+      mobileNumber,
       OTPVerification: otp,
       OTPValidTill: Date.now() + 5 * 60 * 1000,
     });

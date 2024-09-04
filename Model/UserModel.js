@@ -65,7 +65,7 @@ const projectSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Description should be there'],
     minLength: [100, 'Description should be of minimum length 100'],
-    maxLength: [200, 'Description should be of maximum length 200'],
+    maxLength: [500, 'Description should be of maximum length 500'],
   },
 });
 
@@ -83,10 +83,11 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Name should be there'],
     trim: true,
     minLength: [5, 'Minimum length should be 5 char'],
-    maxLength: [5, 'Maximum length should be 20 char'],
+    maxLength: [20, 'Maximum length should be 20 char'],
   },
   password: {
     type: String,
+    trim: true,
     minLength: [8, 'minimum length  of password should ne 8 character'],
     required: [true, 'password should be there'],
     select: false,
@@ -98,6 +99,7 @@ const userSchema = new mongoose.Schema({
     type: {
       type: String,
       enum: ['Point'],
+      default: 'Point',
     },
     coordinates: {
       type: [Number],
@@ -143,7 +145,7 @@ const userSchema = new mongoose.Schema({
   summary: {
     type: String,
     minLength: [50, 'Summary should be of minimum length 50'],
-    maxLength: [100, 'Summary should be of maximum length 100'],
+    maxLength: [300, 'Summary should be of maximum length 100'],
   },
   achievements: [achievementsSchema],
   resumeLink: String,
