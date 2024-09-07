@@ -10,19 +10,7 @@ const { promisify } = require('util');
 // this api will create a new user in database
 const createUser = async (req, res, next) => {
   try {
-    const { name, password, email, typeOfUser, designation, mobileNumber } =
-      req.body;
-
-    if (typeOfUser === 'User') {
-      if (designation !== 'Professional' && designation !== 'Student') {
-        return next(
-          new ErrorClass(
-            'Designation for user will be Professional or Student only',
-            400
-          )
-        );
-      }
-    }
+    const { name, password, email, typeOfUser, mobileNumber } = req.body;
 
     const otp = SpecialFns.generateOTP();
     result = await UserModel.create({
@@ -30,7 +18,6 @@ const createUser = async (req, res, next) => {
       password,
       email,
       typeOfUser,
-      designation,
       mobileNumber,
       OTPVerification: otp,
       OTPValidTill: Date.now() + 5 * 60 * 1000,

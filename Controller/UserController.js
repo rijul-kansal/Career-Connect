@@ -24,10 +24,15 @@ const updateMe = async (req, res, next) => {
     req.user.portfolioLink = req.body.portfolioLink || req.user.portfolioLink;
     req.user.codingProfileLink =
       req.body.codingProfileLink || req.user.codingProfileLink;
-    req.user.designation = req.body.designation || req.user.designation;
-
+    req.user.preferredJob = req.body.preferredJob || req.user.preferredJob;
     const user = req.user;
     await user.save();
+
+    user.password = undefined;
+    user.OTPValidTill = undefined;
+    user.OTPVerification = undefined;
+    user.ChangePassword = undefined;
+    user.VerifiedUser = undefined;
     const resp = {
       status: 'success',
       data: {
@@ -43,7 +48,11 @@ const updateMe = async (req, res, next) => {
 const getMe = async (req, res, next) => {
   try {
     const user = req.user;
-
+    user.password = undefined;
+    user.OTPValidTill = undefined;
+    user.OTPVerification = undefined;
+    user.ChangePassword = undefined;
+    user.VerifiedUser = undefined;
     const response = {
       status: 'success',
       data: {

@@ -13,6 +13,7 @@ const ErrorHandler = require('./Utils/ErrorHandler');
 const ErrorClass = require('./Utils/ErrorClass');
 const AuthRouter = require('./Router/AuthRouter');
 const UserRouter = require('./Router/UserRouter');
+const JobRouter = require('./Router/JobRouter');
 const app = express();
 // middleware
 app.use(morgan('dev'));
@@ -33,6 +34,7 @@ mongoose
 
 app.use('/v1/authentication', AuthRouter);
 app.use('/v1/user', UserRouter);
+app.use('/v1/jobs', JobRouter);
 app.all('*', (req, res, next) => {
   return next(
     new ErrorClass(
