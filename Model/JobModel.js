@@ -108,6 +108,10 @@ const jobSchema = new mongoose.Schema({
     trim: true,
   },
   companyLinks: [companyLink],
+  appliedUserId: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'User',
+  },
 });
 
 jobSchema.pre('save', function (next) {
@@ -120,8 +124,8 @@ jobSchema.pre('save', function (next) {
       );
     }
   }
+  if (this.appliedUserId) this.noOfStudentsApplied = this.appliedUserId.length;
   next();
 });
-
 const Job = mongoose.model('Job', jobSchema);
 module.exports = Job;

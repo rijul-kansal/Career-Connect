@@ -9,5 +9,6 @@ router.use(AuthController.protect);
 router.route('/').post(JobController.createJob);
 router.route('/').get(JobController.getAllPostedJobForParticularRecruiter);
 router.route('/searchJobs').get(JobController.searchJobs);
+router.route('/apply').post(JobController.applyJob);
 
 module.exports = router;

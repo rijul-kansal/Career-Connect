@@ -6,7 +6,7 @@ const jobAppliedSchema = new mongoose.Schema({
     required: [true, 'User email should be there'],
     index: true,
   },
-  JobId: {
+  jobAppliedId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Job',
   },

@@ -64,7 +64,6 @@ const createJob = async (req, res, next) => {
     return next(new ErrorClass(err.message, 400));
   }
 };
-// no of students applied left
 const getAllPostedJobForParticularRecruiter = async (req, res, next) => {
   const email = req.user.email;
   const query = req.query;
@@ -75,11 +74,15 @@ const getAllPostedJobForParticularRecruiter = async (req, res, next) => {
   if (limit <= 0 || skip < 0) {
     return next(new ErrorClass('Invalid Skip or limit value', 400));
   }
-  const data = await JobPostedModel.find({ recruiterEmail: email })
+  let data = await JobPostedModel.find({ recruiterEmail: email })
     .populate('JobId')
     .limit(limit)
     .skip(skip * limit)
     .sort({ postedDate: -1 });
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].JobId.appliedUserId != null)
+      data[i].JobId.appliedUserId = undefined;
+  }
   const response = {
     status: 'success',
     length: data.length,
@@ -89,7 +92,6 @@ const getAllPostedJobForParticularRecruiter = async (req, res, next) => {
   };
   res.status(200).json(response);
 };
-// no of students applied left
 const searchJobs = async (req, res, next) => {
   try {
     const query = req.query;
@@ -132,10 +134,12 @@ const searchJobs = async (req, res, next) => {
       queryParameter.nameOfCompany = { $in: companyNames };
     }
     console.log(queryParameter);
-    const data = await JobModel.find(queryParameter)
+    let data = await JobModel.find(queryParameter)
       .skip(limit * skip)
       .limit(limit)
-      .sort({ postedDate: -1 });
+      .sort({ postedDate: -1 })
+      .select('-appliedUserId');
+
     const resp = {
       status: 'success',
       data: {
@@ -150,10 +154,27 @@ const searchJobs = async (req, res, next) => {
 };
 const applyJob = async (req, res, next) => {
   try {
-    const jobId = req._id;
-    const userId = req.user._id;
+    const jobId = req.body.id;
 
-    await JobAppliedModel.create({ userEmail });
+    if (!jobId) {
+      return next(new ErrorClass('please pass JobId', 400));
+    }
+    const userEmail = req.user.email;
+    const userId = req.user._id;
+    const job = await JobModel.findOne({ _id: jobId });
+
+    if (job.appliedUserId.includes(userId)) {
+      return next(new ErrorClass('Applied already', 400));
+    }
+    job.appliedUserId.push(userId);
+    JobAppliedModel.create({ userEmail, jobAppliedId: jobId });
+    job.save();
+    const response = {
+      status: 'success',
+      message: 'successfully applied',
+    };
+
+    res.status(201).json(response);
   } catch (err) {
     return next(new ErrorClass(err.message, 400));
   }
@@ -162,4 +183,5 @@ module.exports = {
   createJob,
   getAllPostedJobForParticularRecruiter,
   searchJobs,
+  applyJob,
 };

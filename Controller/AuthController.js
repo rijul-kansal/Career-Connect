@@ -11,7 +11,7 @@ const { promisify } = require('util');
 const createUser = async (req, res, next) => {
   try {
     const { name, password, email, typeOfUser, mobileNumber } = req.body;
-
+    // otp valid till next 5 min
     const otp = SpecialFns.generateOTP();
     result = await UserModel.create({
       name,
@@ -22,11 +22,13 @@ const createUser = async (req, res, next) => {
       OTPVerification: otp,
       OTPValidTill: Date.now() + 5 * 60 * 1000,
     });
+    // these parameter not required
     result.password = undefined;
     result.OTPValidTill = undefined;
     result.OTPVerification = undefined;
     result.ChangePassword = undefined;
     result.VerifiedUser = undefined;
+    // sending welcome as well as otp message
     try {
       let message;
       if (result.typeOfUser === 'user')
