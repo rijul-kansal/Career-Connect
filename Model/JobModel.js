@@ -112,6 +112,10 @@ const jobSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'User',
   },
+  stopResponses: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 jobSchema.pre('save', function (next) {

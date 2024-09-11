@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
 
 const jobAppliedSchema = new mongoose.Schema({
-  userEmail: {
-    type: String,
-    required: [true, 'User email should be there'],
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     index: true,
   },
   jobAppliedId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Job',
+    index: true,
   },
   postedDate: {
     type: Number,

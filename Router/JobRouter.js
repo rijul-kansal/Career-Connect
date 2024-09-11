@@ -9,6 +9,14 @@ router.use(AuthController.protect);
 router.route('/').post(JobController.createJob);
 router.route('/').get(JobController.getAllPostedJobForParticularRecruiter);
 router.route('/searchJobs').get(JobController.searchJobs);
+router
+  .route('/appliedJobs')
+  .get(JobController.getAllAppliedJobForParticularUser);
 router.route('/apply').post(JobController.applyJob);
+router
+  .route('/appliedUserList/:id')
+  .get(JobController.seeAllApplicantsForParticularJob);
+router.route('/setStatus').post(JobController.setStatus);
+router.route('/stopResponse').post(JobController.stopResponses);
 
 module.exports = router;
