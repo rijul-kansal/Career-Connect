@@ -1,24 +1,38 @@
+// configure files
 const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
+
+// error handling
 process.on('uncaughtException', (err) => {
   console.error('UNCAUGHT EXCEPTION! 💥 Shutting down...');
   console.error(err.name, err.message, err.stack);
   process.exit(1);
 });
+
+// importing modules
 const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-
+// importing in app modules
 const ErrorHandler = require('./Utils/ErrorHandler');
 const ErrorClass = require('./Utils/ErrorClass');
 const AuthRouter = require('./Router/AuthRouter');
 const UserRouter = require('./Router/UserRouter');
 const JobRouter = require('./Router/JobRouter');
+const ChatController = require('./Controller/ChatController');
 const app = express();
+
+const server = http.createServer(app);
+const io = new Server(server);
+
 // middleware
 app.use(morgan('dev'));
 app.use(express.json());
-
+// Serve static files from the 'public' directory
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'public')));
 const DB_URL = process.env.MONGO_DB_URL.replace('<password>', 'kansalrijul123');
 mongoose
   .connect(DB_URL, {
@@ -43,9 +57,32 @@ app.all('*', (req, res, next) => {
     )
   );
 });
+const users = new Map();
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  // userId1 -- sender
+  // userId1 -- receiver
+
+  socket.on('chat message', (userId1, userId2, message, timeStamp) => {
+    console.log(userId1, userId2, message, timeStamp);
+    users.set(userId1, socket.id);
+    ChatController.saveMessage(userId1, userId2, message, timeStamp);
+    io.to(users.get(userId2)).emit('chat message', {
+      message,
+      userId1,
+      timeStamp,
+    });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Listening of port ${PORT}`);
+server.listen(PORT, () => {
+  console.log('listening on *:3000');
 });
 
 app.use(ErrorHandler);

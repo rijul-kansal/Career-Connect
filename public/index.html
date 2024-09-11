@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+      /* Add some basic styling */
+    </style>
+  </head>
+  <body>
+    <div class="chat-container">
+      <h2>Send a Chat Message</h2>
+      <input type="text" id="userId1" placeholder="Your User ID (userId1)" />
+      <input
+        type="text"
+        id="userId2"
+        placeholder="Receiver User ID (userId2)"
+      />
+      <input type="text" id="message" placeholder="Your Message" />
+      <button onclick="sendMessage()">Send Message</button>
+
+      <div class="messages" id="messages"></div>
+    </div>
+
+    <script>
+      // Connect to the Socket.IO server
+      const socket = io();
+
+      function sendMessage() {
+        const userId1 = document.getElementById('userId1').value;
+        const userId2 = document.getElementById('userId2').value;
+        const message = document.getElementById('message').value;
+        const timeStamp = new Date().toISOString();
+
+        if (userId1 && userId2 && message) {
+          socket.emit('chat message', userId1, userId2, message, timeStamp);
+        }
+      }
+
+      socket.on('chat message', (data) => {
+        const { message, userId1, timeStamp } = data;
+        const messageContainer = document.getElementById('messages');
+        const messageElement = document.createElement('div');
+        messageElement.textContent = `From ${userId1}: ${message} (Received at ${timeStamp})`;
+        messageContainer.appendChild(messageElement);
+      });
+    </script>
+  </body>
+</html>
