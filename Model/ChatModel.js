@@ -5,11 +5,13 @@ const schema = new mongoose.Schema({
     type: String,
     trim: true,
     required: [true, 'User1 Id should be there'],
+    index: true,
   },
   userId2: {
     type: String,
     trim: true,
     required: [true, 'User2 Id should be there'],
+    index: true,
   },
   message: {
     type: String,

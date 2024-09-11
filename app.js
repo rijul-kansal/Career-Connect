@@ -21,6 +21,7 @@ const ErrorClass = require('./Utils/ErrorClass');
 const AuthRouter = require('./Router/AuthRouter');
 const UserRouter = require('./Router/UserRouter');
 const JobRouter = require('./Router/JobRouter');
+const ChatRouter = require('./Router/ChatRouter');
 const ChatController = require('./Controller/ChatController');
 const app = express();
 
@@ -49,6 +50,7 @@ mongoose
 app.use('/v1/authentication', AuthRouter);
 app.use('/v1/user', UserRouter);
 app.use('/v1/jobs', JobRouter);
+app.use('/v1/chats', ChatRouter);
 app.all('*', (req, res, next) => {
   return next(
     new ErrorClass(
