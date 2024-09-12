@@ -25,6 +25,9 @@ const updateMe = async (req, res, next) => {
     req.user.codingProfileLink =
       req.body.codingProfileLink || req.user.codingProfileLink;
     req.user.preferredJob = req.body.preferredJob || req.user.preferredJob;
+    req.user.typeOfUser = req.body.typeOfUser || req.user.typeOfUser;
+    req.user.fcmToken = req.body.fcmToken || req.user.fcmToken;
+
     const user = req.user;
     await user.save();
 
@@ -55,6 +58,7 @@ const getMe = async (req, res, next) => {
     user.VerifiedUser = undefined;
     const response = {
       status: 'success',
+      timeLeft: req.timeLeft,
       data: {
         data: user,
       },

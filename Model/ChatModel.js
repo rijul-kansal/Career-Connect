@@ -22,6 +22,10 @@ const schema = new mongoose.Schema({
     type: Number,
     default: Date.now,
   },
+  messageSeen: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const model = mongoose.model('Chat', schema);

@@ -63,23 +63,8 @@ const users = new Map();
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  // userId1 -- sender
-  // userId1 -- receiver
-
-  socket.on('chat message', (userId1, userId2, message, timeStamp) => {
-    console.log(userId1, userId2, message, timeStamp);
-    users.set(userId1, socket.id);
-    ChatController.saveMessage(userId1, userId2, message, timeStamp);
-    io.to(users.get(userId2)).emit('chat message', {
-      message,
-      userId1,
-      timeStamp,
-    });
-  });
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
+  ChatController.sendAndReceiveMessage(io, socket, users);
+  ChatController.disconnectAlert(socket, users);
 });
 
 const PORT = process.env.PORT || 3000;

@@ -42,7 +42,7 @@ const createUser = async (req, res, next) => {
         Messages.sendOtpEmail(result.name, otp)
       );
     } catch (err) {
-      console.log(err);
+      return next(new ErrorClass(err.message, 500));
     }
 
     const response = {
@@ -56,6 +56,9 @@ const createUser = async (req, res, next) => {
     return next(new ErrorClass(err.message, 400));
   }
 };
+
+// once the user have been created then we have to verify his or her account
+// that email that she used is not fake
 const verifyOTP = async (req, res, next) => {
   try {
     const { email, otp } = req.body;
@@ -164,7 +167,7 @@ const protect = async (req, res, next) => {
         return next(new ErrorClass('Please login Again .'));
       }
     }
-
+    // console.log(jwtVerification);
     const email = jwtVerification.data;
     const user = await UserModel.findOne({ email });
     if (!user) {
@@ -176,6 +179,12 @@ const protect = async (req, res, next) => {
     }
 
     req.user = user;
+    req.timeLeft = Math.ceil(
+      Math.abs(
+        (Date.now() - jwtVerification.exp * 1000) / (24 * 60 * 60 * 1000)
+      )
+    );
+    // console.log(req.timeLeft);
     next();
   } catch (err) {
     return next(new ErrorClass(err.message, 400));

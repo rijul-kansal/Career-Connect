@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 var validator = require('validator');
 const bcrypt = require('bcryptjs');
-const { promisify } = require('util');
-const ErrorClass = require('../Utils/ErrorClass');
 
 // Career Preference Schema
 const careerPreferenceSchema = new mongoose.Schema({
@@ -14,9 +12,9 @@ const careerPreferenceSchema = new mongoose.Schema({
     type: [String],
     trim: true,
     enum: {
-      values: ['Internship', 'FullTime', 'PartTime', 'Contract'],
+      values: ['Internship', 'FullTime', 'PartTime', 'Contract', 'FreeLancer'],
       message:
-        'Can only contain values: Internship, FullTime, PartTime, Contract',
+        'Can only contain values: Internship, FullTime, PartTime, Contract ,FreeLancer',
     },
   },
 });
@@ -181,6 +179,13 @@ const userSchema = new mongoose.Schema({
   githubLink: String,
   portfolioLink: String,
   codingProfileLink: [String],
+  lastUpdated: {
+    type: Number,
+    default: Date.now,
+  },
+  fcmToken: {
+    type: String,
+  },
   OTPVerification: String,
   OTPValidTill: {
     type: Number,
