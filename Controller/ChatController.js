@@ -2,7 +2,7 @@ const ChatModel = require('./../Model/ChatModel');
 const ErrorClass = require('./../Utils/ErrorClass');
 const UserModel = require('./../Model/UserModel');
 var admin = require('firebase-admin');
-const cred = require('./../Utils/keys').firebase_keys;
+const cred = require('./../Utils/keys').keys;
 admin.initializeApp({
   credential: admin.credential.cert(cred),
 });
