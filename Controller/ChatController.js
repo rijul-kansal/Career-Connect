@@ -19,7 +19,7 @@ const saveMessage = async (
       userId1,
       userId2,
       message,
-      timeStamp: time,
+      timeStamp,
       messageSeen,
     });
     return 'successfully saved';
@@ -65,7 +65,6 @@ const getMessages = async (req, res, next) => {
     return next(new ErrorClass(err.message, 400));
   }
 };
-
 const sendAndReceiveMessage = async (io, socket, users) => {
   // userId1 -- sender
   // userId1 -- receiver

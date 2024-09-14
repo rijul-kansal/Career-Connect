@@ -431,10 +431,101 @@ const sendForgotPasswordEmail = (name, otp) => {
 `;
 };
 
+const companyStatusMessage = (userName, companyName, status) => {
+  const statusMessage =
+    status === 'interested'
+      ? 'has shown interest in your application. They may reach out soon to discuss further opportunities.'
+      : 'has seen your application. They may take some time to review it and get back to you.';
+
+  return `<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+        }
+        .header {
+            text-align: center;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .footer {
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="bold">Application Status Update</h1>
+        </div>
+        <div class="content">
+            <p class="bold">Dear ${userName.toUpperCase()},</p>
+            <p>We are pleased to inform you that <span class="bold">${companyName}</span> has shown some interest in your application</p>
+            <p>We encourage you to check your inbox or chat section for any further updates and remain patient as the hiring process continues.</p>
+            <p class="bold">Best of luck with your job search!</p>
+            <p class="bold">Regards,<br>The Career Connect Team</p>
+        </div>
+        <div class="footer">
+            <p class="bold">&copy; 2024 Career Connect. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+`;
+};
+const getEmailSubject = (companyName, status) => {
+  return status === 'Interested'
+    ? `Great News! ${companyName} is Interested in Your Application`
+    : `${companyName} Has Viewed Your Application`;
+};
 module.exports = {
   welcomeMessageUser,
   welcomeMessageRecruiter,
   sendOtpEmail,
   resendOTP,
   sendForgotPasswordEmail,
+  companyStatusMessage,
+  getEmailSubject,
 };

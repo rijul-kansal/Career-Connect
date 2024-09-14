@@ -18,5 +18,7 @@ router
   .get(JobController.seeAllApplicantsForParticularJob);
 router.route('/setStatus').post(JobController.setStatus);
 router.route('/stopResponse').post(JobController.stopResponses);
+router.route('/saveLater').post(JobController.saveLater);
+router.route('/getAllSavedLaterJobs').get(JobController.getAllSaveLaterJobs);
 
 module.exports = router;
