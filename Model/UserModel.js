@@ -99,7 +99,27 @@ const achievementsSchema = new mongoose.Schema({
   },
   link: String,
 });
-
+const certificateEarned = new mongoose.Schema({
+  type: {
+    type: String,
+    required: [true, 'Type of certificate Required'],
+    trim: true,
+  },
+  score: {
+    type: Number,
+    required: [true, 'score must be there'],
+    validate: {
+      validator: function (v) {
+        return v >= 0 && v <= 10;
+      },
+      message: (props) => `${props.value} is not a valid Score!`,
+    },
+  },
+  date: {
+    type: Number,
+    default: Date.now,
+  },
+});
 const userSchema = new mongoose.Schema({
   typeOfUser: {
     type: String,
@@ -186,6 +206,7 @@ const userSchema = new mongoose.Schema({
   fcmToken: {
     type: String,
   },
+  certificateEarned: [certificateEarned],
   OTPVerification: String,
   OTPValidTill: {
     type: Number,

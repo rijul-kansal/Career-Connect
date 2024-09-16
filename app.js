@@ -22,6 +22,7 @@ const AuthRouter = require('./Router/AuthRouter');
 const UserRouter = require('./Router/UserRouter');
 const JobRouter = require('./Router/JobRouter');
 const ChatRouter = require('./Router/ChatRouter');
+const QuestionsRouter = require('./Router/QuestionRouter');
 const ChatController = require('./Controller/ChatController');
 const app = express();
 
@@ -51,6 +52,7 @@ app.use('/v1/authentication', AuthRouter);
 app.use('/v1/user', UserRouter);
 app.use('/v1/jobs', JobRouter);
 app.use('/v1/chats', ChatRouter);
+app.use('/v1/questions', QuestionsRouter);
 app.all('*', (req, res, next) => {
   return next(
     new ErrorClass(

@@ -27,7 +27,8 @@ const updateMe = async (req, res, next) => {
     req.user.preferredJob = req.body.preferredJob || req.user.preferredJob;
     req.user.typeOfUser = req.body.typeOfUser || req.user.typeOfUser;
     req.user.fcmToken = req.body.fcmToken || req.user.fcmToken;
-
+    req.user.certificateEarned =
+      req.body.certificateEarned || req.user.certificateEarned;
     const user = req.user;
     await user.save();
 
