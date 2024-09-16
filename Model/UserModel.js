@@ -127,6 +127,7 @@ const userSchema = new mongoose.Schema({
       values: ['User', 'Recruiter'],
       message: 'Values of Type can be User or Recruiter',
     },
+    required: [true, 'Type of user should be there'],
   },
   name: {
     type: String,
@@ -168,7 +169,6 @@ const userSchema = new mongoose.Schema({
       message: (props) => `${props.value} is not a valid phone number!`,
     },
     required: [true, 'Mobile number is required'],
-    index: true,
   },
   email: {
     type: String,
