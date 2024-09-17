@@ -1,7 +1,8 @@
 const UserModel = require('./../Model/UserModel');
 const ErrorClass = require('./../Utils/ErrorClass');
-
+// update user info
 const updateMe = async (req, res, next) => {
+  // trying  to update values if present else take previous value
   try {
     req.user.name = req.body.name || req.user.name;
     req.user.image = req.body.image || req.user.image;
@@ -30,13 +31,15 @@ const updateMe = async (req, res, next) => {
     req.user.certificateEarned =
       req.body.certificateEarned || req.user.certificateEarned;
     const user = req.user;
+    // saving in DB
     await user.save();
-
+    // comment some extra info
     user.password = undefined;
     user.OTPValidTill = undefined;
     user.OTPVerification = undefined;
     user.ChangePassword = undefined;
     user.VerifiedUser = undefined;
+    user.lastUpdated = undefined;
     const resp = {
       status: 'success',
       data: {
@@ -49,9 +52,13 @@ const updateMe = async (req, res, next) => {
     return next(new ErrorClass(err.message, 400));
   }
 };
+// get my information
 const getMe = async (req, res, next) => {
   try {
+    // getting my info
     const user = req.user;
+
+    // commenting some extra info
     user.password = undefined;
     user.OTPValidTill = undefined;
     user.OTPVerification = undefined;
@@ -70,10 +77,13 @@ const getMe = async (req, res, next) => {
     return next(new ErrorClass(err.message, 400));
   }
 };
+
+// deleting my account
 const deleteMe = async (req, res, next) => {
   try {
+    // getting my email
     const email = req.user.email;
-
+    // deleting my account
     await UserModel.deleteOne({ email });
 
     res.status(204).json({ status: 'success' });

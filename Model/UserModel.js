@@ -69,6 +69,15 @@ const experienceSchema = new mongoose.Schema({
   endDate: {
     type: Number,
   },
+  type: {
+    type: String,
+    trim: true,
+    required: [true, 'Type of job is required'],
+    enum: {
+      values: ['Remote', 'OnSite'],
+      message: 'Value for this enum can only be Remote or OnSite',
+    },
+  },
 });
 
 // Project Schema
@@ -99,6 +108,8 @@ const achievementsSchema = new mongoose.Schema({
   },
   link: String,
 });
+
+// certificate schema
 const certificateEarned = new mongoose.Schema({
   type: {
     type: String,
@@ -120,6 +131,7 @@ const certificateEarned = new mongoose.Schema({
     default: Date.now,
   },
 });
+
 const userSchema = new mongoose.Schema({
   typeOfUser: {
     type: String,
@@ -145,9 +157,18 @@ const userSchema = new mongoose.Schema({
   },
   image: String,
   currentLocation: {
-    city: { type: String, trim: true },
-    state: { type: String, trim: true },
-    country: { type: String, trim: true },
+    city: {
+      type: String,
+      trim: true,
+    },
+    state: {
+      type: String,
+      trim: true,
+    },
+    country: {
+      type: String,
+      trim: true,
+    },
   },
   gender: {
     type: String,

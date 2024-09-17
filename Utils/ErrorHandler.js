@@ -39,8 +39,16 @@ const ErrorHandler = (err, req, res, next) => {
     if (err.message.startsWith('E11000 duplicate key error collection')) {
       err.message =
         'This Email is used by someone else. Please use different email';
-    } else if (err.message.startsWith('User validation failed')) {
+    } else if (
+      err.message.startsWith('User validation failed') ||
+      err.message.startsWith('Job validation failed:')
+    ) {
       err = fn(err);
+    } else if (
+      err.message.startsWith('Cast to ObjectId failed for value') ||
+      err.message.startsWith('Cannot read properties of null')
+    ) {
+      err.message = 'Object Id is invalid';
     }
     production(err, res);
   }
