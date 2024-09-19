@@ -134,7 +134,7 @@ const sendAndReceiveMessage = async (io, socket, users) => {
                 console.log('Notification sent:', response);
               })
               .catch((error) => {
-                console.error('Error sending notification:', error);
+                console.log('Error sending notification:', error);
               });
           }
         }

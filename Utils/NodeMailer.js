@@ -1,5 +1,5 @@
 var nodemailer = require('nodemailer');
-
+// defining service from which we want to use gmail service
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -7,7 +7,7 @@ var transporter = nodemailer.createTransport({
     pass: process.env.PASSWORD_FOR_SENDING_MAIL,
   },
 });
-
+// defining message
 var mailOptions = (to, subject, html) => {
   return {
     from: process.env.EMAIL_FOR_SENDING_MAIL,
@@ -16,7 +16,7 @@ var mailOptions = (to, subject, html) => {
     html,
   };
 };
-
+// sending mail
 const mail = (to, subject, html) =>
   transporter.sendMail(mailOptions(to, subject, html), function (error, info) {
     if (error) {

@@ -1,3 +1,4 @@
+// this will generate 6 digit OTP
 const generateOTP = () => {
   let digits = '0123456789';
   let OTP = '';

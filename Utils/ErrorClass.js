@@ -1,3 +1,4 @@
+// this class helps us to define err message and status Code
 class ErrorClass extends Error {
   constructor(message, statusCode) {
     super(message);
