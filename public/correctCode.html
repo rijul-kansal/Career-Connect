@@ -96,9 +96,7 @@
           });
 
           socket.on('error', (data) => {
-            alert(
-              data.error || data.errorMessage || 'An unknown error occurred.'
-            );
+            console.error('Error:', data.error || data.errorMessage);
           });
 
           socket.on('chat message', (data) => {
@@ -133,6 +131,7 @@
         const timeStamp = Date.now(); // Get timestamp as a number
 
         if (userId1 && userId2 && message) {
+          // Emit parameters individually
           socket.emit('chat message', userId1, userId2, message, timeStamp);
         } else {
           alert('Please provide all required fields');

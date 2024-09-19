@@ -65,6 +65,12 @@ const users = new Map();
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+  const { userId } = socket.handshake.query;
+  // storing socket id to array
+
+  users.set(userId, socket.id);
+
+  console.log(userId, users);
   ChatController.sendAndReceiveMessage(io, socket, users);
   ChatController.disconnectAlert(socket, users);
 });
