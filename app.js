@@ -15,7 +15,12 @@ const http = require('http');
 const { Server } = require('socket.io');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xssClean = require('xss-clean');
+var hpp = require('hpp');
+var bodyParser = require('body-parser');
+const rateLimit = require('express-rate-limit');
 // importing in app modules
 const ErrorHandler = require('./Utils/ErrorHandler');
 const ErrorClass = require('./Utils/ErrorClass');
@@ -33,8 +38,18 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 // middleware
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 100, // 100 requests per IP
+});
+app.use(limiter);
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(helmet());
+app.use(mongoSanitize());
+app.use(bodyParser.urlencoded());
+app.use(hpp());
+app.use(xssClean());
 
 // Serve static files from the 'public' directory
 const path = require('path');

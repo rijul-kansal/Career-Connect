@@ -1,5 +1,7 @@
+// https://www.youtube.com/watch?v=T-Pum2TraX4
+//https://jonathans199.medium.com/how-to-deploy-node-express-api-to-ec2-instance-in-aws-bc038a401156
 // cd Desktop
-// ssh -i "career-connect-key.pem" ubuntu@ec2-3-110-84-234.ap-south-1.compute.amazonaws.com
+// ssh -i "career-connect-key.pem" ubuntu@ec2-43-204-217-202.ap-south-1.compute.amazonaws.com
 // cd Career-Connect
 
 // Start an Application:
@@ -56,3 +58,9 @@
 
 // Check PM2 Documentation:
 // pm2 help
+
+// make changes in code and deploy on git
+// after that
+// ssh -i "career-connect-key.pem" ubuntu@ec2-3-110-84-234.ap-south-1.compute.amazonaws.com
+// git pull origin main
+// pm2 restart app.js
