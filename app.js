@@ -19,8 +19,9 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 var hpp = require('hpp');
-var bodyParser = require('body-parser');
+// var bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
+const functions = require('firebase-functions');
 // importing in app modules
 const ErrorHandler = require('./Utils/ErrorHandler');
 const ErrorClass = require('./Utils/ErrorClass');
@@ -47,7 +48,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(helmet());
 app.use(mongoSanitize());
-app.use(bodyParser.urlencoded());
+// app.use(bodyParser.urlencoded());
 app.use(hpp());
 app.use(xssClean());
 
@@ -118,3 +119,4 @@ process.on('unhandledRejection', (err) => {
     process.exit(1);
   });
 });
+exports.api = functions.https.onRequest(app);
