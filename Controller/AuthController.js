@@ -1,4 +1,5 @@
 const UserModel = require('../Model/UserModel');
+const RefreshTokenModel = require('../Model/RefreshToken');
 const ErrorClass = require('../Utils/ErrorClass');
 const Mail = require('./../Utils/NodeMailer');
 const Messages = require('./../Utils/Messages');
@@ -137,6 +138,22 @@ const login = async (req, res, next) => {
     const token = jwt.sign({ data: user.email }, process.env.JWT_SECRET, {
       expiresIn: '10d',
     });
+    const refreshToken = jwt.sign(
+      { data: user.email },
+      process.env.JWT_SECRET_REFRESH_TOKEN,
+      {
+        expiresIn: '90d',
+      }
+    );
+    const jwtDataFromDB = await RefreshTokenModel.findOne({
+      userEmail: user.email,
+    });
+    if (!jwtDataFromDB) {
+      RefreshTokenModel.create({ userEmail: user.email, refreshToken });
+    } else {
+      jwtDataFromDB.refreshToken = refreshToken;
+      jwtDataFromDB.save();
+    }
     user.password = undefined;
     user.VerifiedUser = undefined;
     user.OTPValidTill = undefined;
@@ -145,6 +162,7 @@ const login = async (req, res, next) => {
     const response = {
       status: 'success',
       token,
+      refreshToken,
       data: {
         data: user,
       },
@@ -202,6 +220,8 @@ const protect = async (req, res, next) => {
         (Date.now() - jwtVerification.exp * 1000) / (24 * 60 * 60 * 1000)
       )
     );
+
+    req.timeLeftInMilliSecond = jwtVerification.exp * 1000;
     next();
   } catch (err) {
     return next(new ErrorClass(err.message, 400));
@@ -347,6 +367,58 @@ const changePassword = async (req, res, next) => {
     return next(new ErrorClass(err.message, 400));
   }
 };
+// refresh token
+const refreshJWTToken = async (req, res, next) => {
+  try {
+    // getting required params
+    const userId = req.user.email;
+    const refreshToken = req.body.refreshToken;
+    if (!refreshToken) {
+      return next(new ErrorClass('please pass refresh token in body', 400));
+    }
+    // check refresh token is available in db or not
+    const jwtDB = await RefreshTokenModel.findOne({ refreshToken });
+    if (!jwtDB) {
+      return next(new ErrorClass('no refreshToken available', 401));
+    }
+
+    // extract user email and matching both ids
+    let jwtVerification;
+    try {
+      jwtVerification = jwt.verify(
+        refreshToken,
+        process.env.JWT_SECRET_REFRESH_TOKEN
+      );
+    } catch (err) {
+      if (
+        err.message === 'invalid signature' ||
+        err.message === 'jwt expired'
+      ) {
+        return next(new ErrorClass('Please login Again.'));
+      }
+    }
+    if (jwtVerification.data !== userId) {
+      return next(
+        new ErrorClass(
+          'email for refreshToken and jwtToken does not match',
+          401
+        )
+      );
+    }
+    // generate new token
+    const token = jwt.sign({ data: req.user.email }, process.env.JWT_SECRET, {
+      expiresIn: '10d',
+    });
+    const response = {
+      status: 'success',
+      token,
+    };
+
+    res.status(200).json(response);
+  } catch (err) {
+    return next(new ErrorClass(err.message, 400));
+  }
+};
 module.exports = {
   createUser,
   verifyOTP,
@@ -355,4 +427,5 @@ module.exports = {
   resendOTPOrForgottenPassword,
   resetPassword,
   changePassword,
+  refreshJWTToken,
 };

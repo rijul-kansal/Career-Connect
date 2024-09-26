@@ -67,6 +67,7 @@ const getMe = async (req, res, next) => {
     const response = {
       status: 'success',
       timeLeft: req.timeLeft,
+      timeLeftInMilliSecond: req.timeLeftInMilliSecond,
       data: {
         data: user,
       },

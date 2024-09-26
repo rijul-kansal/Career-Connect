@@ -12,4 +12,5 @@ router
   .patch(AuthController.resendOTPOrForgottenPassword);
 router.use(AuthController.protect);
 router.route('/changePassword').patch(AuthController.changePassword);
+router.route('/refreshToken').post(AuthController.refreshJWTToken);
 module.exports = router;
