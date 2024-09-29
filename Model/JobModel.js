@@ -46,7 +46,7 @@ const jobSchema = new mongoose.Schema({
     required: [true, 'Type should be there'],
   },
   location: {
-    type: [String],
+    type: String,
     trim: true,
     required: [true, 'Location should be there'],
   },
