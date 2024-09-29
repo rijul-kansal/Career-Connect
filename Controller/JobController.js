@@ -204,6 +204,7 @@ const searchJobs = async (req, res, next) => {
     }
 
     // getting jobs data
+    const totalJobs = await JobModel.countDocuments(queryParameter);
     let data = await JobModel.find(queryParameter)
       .skip(limit * skip)
       .limit(limit)
@@ -218,6 +219,7 @@ const searchJobs = async (req, res, next) => {
     data = data.filter((ele) => checkAppliedJob(appliedJobs, ele._id));
     const resp = {
       status: 'success',
+      totalJobs,
       length: data.length,
       data: {
         data,
