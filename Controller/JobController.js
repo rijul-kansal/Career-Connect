@@ -554,6 +554,21 @@ const getAllSaveLaterJobs = async (req, res, next) => {
     return next(new ErrorClass(err.message, 400));
   }
 };
+
+const allJobTypesAvailable = async (req, res, next) => {
+  try {
+    const data = await JobModel.distinct('roleCategory');
+    const response = {
+      status: 'success',
+      data: {
+        data,
+      },
+    };
+    res.status(200).json(response);
+  } catch (err) {
+    return next(new ErrorClass(err.message, 400));
+  }
+};
 module.exports = {
   createJob,
   getAllPostedJobForParticularRecruiter,
@@ -565,4 +580,5 @@ module.exports = {
   stopResponses,
   saveLater,
   getAllSaveLaterJobs,
+  allJobTypesAvailable,
 };
