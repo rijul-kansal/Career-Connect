@@ -555,13 +555,15 @@ const getAllSaveLaterJobs = async (req, res, next) => {
   }
 };
 
-const allJobTypesAvailable = async (req, res, next) => {
+const allSearchJobFilterAvailable = async (req, res, next) => {
   try {
-    const data = await JobModel.distinct('roleCategory');
+    const data1 = await JobModel.distinct('roleCategory');
+    const data2 = await JobModel.distinct('skillsRequired');
     const response = {
       status: 'success',
       data: {
-        data,
+        role: data1,
+        skill: data2,
       },
     };
     res.status(200).json(response);
@@ -580,5 +582,5 @@ module.exports = {
   stopResponses,
   saveLater,
   getAllSaveLaterJobs,
-  allJobTypesAvailable,
+  allSearchJobFilterAvailable,
 };
