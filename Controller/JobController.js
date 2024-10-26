@@ -559,11 +559,13 @@ const allSearchJobFilterAvailable = async (req, res, next) => {
   try {
     const data1 = await JobModel.distinct('roleCategory');
     const data2 = await JobModel.distinct('skillsRequired');
+    const date3 = await JobModel.distinct('location');
     const response = {
       status: 'success',
       data: {
         role: data1,
         skill: data2,
+        location: data3,
       },
     };
     res.status(200).json(response);
