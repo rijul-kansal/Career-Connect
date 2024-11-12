@@ -573,6 +573,39 @@ const allSearchJobFilterAvailable = async (req, res, next) => {
     return next(new ErrorClass(err.message, 400));
   }
 };
+
+const unSaveJob = async (req, res, next) => {
+  try {
+    const jobId = req.body.id;
+
+    if (!jobId) {
+      return next(new ErrorClass('please pass job Id', 400));
+    }
+
+    const userId = req.user.id;
+
+    const savedJobData = await SaveLaterModel.findOne({ jobId, userId });
+
+    if (!savedJobData) {
+      return next(
+        new ErrorClass(
+          'Either this job is already unsaved or not save by you',
+          401
+        )
+      );
+    }
+
+    await SaveLaterModel.deleteOne({ _id: savedJobData._id });
+    const response = {
+      status: 'success',
+      message: 'successfully unsaved',
+    };
+
+    res.status(200).json(response);
+  } catch (err) {
+    return next(new ErrorClass(err.message, 400));
+  }
+};
 module.exports = {
   createJob,
   getAllPostedJobForParticularRecruiter,
@@ -585,4 +618,5 @@ module.exports = {
   saveLater,
   getAllSaveLaterJobs,
   allSearchJobFilterAvailable,
+  unSaveJob,
 };

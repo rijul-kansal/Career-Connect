@@ -19,6 +19,7 @@ router
 router.route('/setStatus').post(JobController.setStatus);
 router.route('/stopResponse').post(JobController.stopResponses);
 router.route('/saveLater').post(JobController.saveLater);
+router.route('/unSaveLater').post(JobController.unSaveJob);
 router.route('/getAllSavedLaterJobs').get(JobController.getAllSaveLaterJobs);
 router.route('/getAllJobTypes').get(JobController.allSearchJobFilterAvailable);
 
