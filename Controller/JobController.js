@@ -554,12 +554,15 @@ const getAllSaveLaterJobs = async (req, res, next) => {
     return next(new ErrorClass(err.message, 400));
   }
 };
-
+// getting all distinct skills roles and location
 const allSearchJobFilterAvailable = async (req, res, next) => {
   try {
+    // storing distinct data
     const data1 = await JobModel.distinct('roleCategory');
     const data2 = await JobModel.distinct('skillsRequired');
     const data3 = await JobModel.distinct('location');
+
+    // send to user
     const response = {
       status: 'success',
       data: {
@@ -573,19 +576,20 @@ const allSearchJobFilterAvailable = async (req, res, next) => {
     return next(new ErrorClass(err.message, 400));
   }
 };
-
+// un saving jobs which one is already saved
 const unSaveJob = async (req, res, next) => {
   try {
+    // getting and validate data
     const jobId = req.body.id;
 
     if (!jobId) {
       return next(new ErrorClass('please pass job Id', 400));
     }
-
     const userId = req.user.id;
 
+    // check if job id is there with the user
     const savedJobData = await SaveLaterModel.findOne({ jobId, userId });
-
+    // if no then return error
     if (!savedJobData) {
       return next(
         new ErrorClass(
@@ -594,13 +598,33 @@ const unSaveJob = async (req, res, next) => {
         )
       );
     }
-
+    // else delete entry
     await SaveLaterModel.deleteOne({ _id: savedJobData._id });
+
+    // sending response
     const response = {
       status: 'success',
       message: 'successfully unsaved',
     };
 
+    res.status(200).json(response);
+  } catch (err) {
+    return next(new ErrorClass(err.message, 400));
+  }
+};
+// // getting all saved jobs just jobId0
+const getAllSaveLaterJobsJobId = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    // getting data
+    const data = await SaveLaterModel.find({ userId }).select('jobId');
+    const response = {
+      status: 'success',
+      length: data.length,
+      data: {
+        data,
+      },
+    };
     res.status(200).json(response);
   } catch (err) {
     return next(new ErrorClass(err.message, 400));
@@ -619,4 +643,5 @@ module.exports = {
   getAllSaveLaterJobs,
   allSearchJobFilterAvailable,
   unSaveJob,
+  getAllSaveLaterJobsJobId,
 };

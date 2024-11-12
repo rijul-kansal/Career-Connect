@@ -21,6 +21,9 @@ router.route('/stopResponse').post(JobController.stopResponses);
 router.route('/saveLater').post(JobController.saveLater);
 router.route('/unSaveLater').post(JobController.unSaveJob);
 router.route('/getAllSavedLaterJobs').get(JobController.getAllSaveLaterJobs);
+router
+  .route('/getAllSavedLaterJobsJobIdOnly')
+  .get(JobController.getAllSaveLaterJobsJobId);
 router.route('/getAllJobTypes').get(JobController.allSearchJobFilterAvailable);
 
 module.exports = router;
