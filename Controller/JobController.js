@@ -285,7 +285,7 @@ const getAllAppliedJobForParticularUser = async (req, res, next) => {
     let data = await JobAppliedModel.find({ userId: id })
       .populate('jobAppliedId')
       .limit(limit)
-      .skip(skip * limit)
+      .skip(skip)
       .sort({ postedDate: -1 });
 
     // removing some extra params in response
