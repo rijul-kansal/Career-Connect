@@ -137,6 +137,8 @@ const searchJobs = async (req, res, next) => {
     const query = req.query;
     const limit = query.limit * 1 || 10;
     const skip = query.skip * 1 || 0;
+
+    const userId = req.user._id;
     // check if no -ve value is there or not
     if (limit < 0 || skip < 0) {
       return next(
@@ -202,7 +204,9 @@ const searchJobs = async (req, res, next) => {
         queryParameter.postedDate = { $gte: time };
       }
     }
+    queryParameter.appliedUserId = { $nin: [userId] };
 
+    console.log(queryParameter);
     // getting jobs data
     const totalJobs = await JobModel.countDocuments(queryParameter);
     let data = await JobModel.find(queryParameter)
@@ -210,13 +214,6 @@ const searchJobs = async (req, res, next) => {
       .limit(limit)
       .sort({ postedDate: -1 })
       .select('-appliedUserId');
-
-    // elimination those jobs which was applied by user
-    let appliedJobs = await JobAppliedModel.find({
-      userId: req.user._id,
-    }).select('jobAppliedId');
-
-    data = data.filter((ele) => checkAppliedJob(appliedJobs, ele._id));
     const resp = {
       status: 'success',
       totalJobs,
