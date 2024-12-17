@@ -536,7 +536,7 @@ const getAllSaveLaterJobs = async (req, res, next) => {
     const data = await SaveLaterModel.find({ userId })
       .populate('jobId')
       .limit(limit)
-      .skip(limit * skip);
+      .skip(skip);
 
     // removing unwanted params
     for (ele of data) {
